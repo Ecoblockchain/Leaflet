@@ -165,12 +165,17 @@ L.Map.include({
 			this._panes.overlayPane.appendChild(this._pathRoot);
 
 			if (this.options.zoomAnimation && L.Browser.any3d) {
-				L.DomUtil.addClass(this._pathRoot, 'leaflet-zoom-animated');
+				// Adding the anim logic too soon after _pathroot is appended
+				// prevents transitionend from being fired in at least WebKit
+				// and Firefox.
+				setTimeout(L.bind(function() {
+					L.DomUtil.addClass(this._pathRoot, 'leaflet-zoom-animated');
 
-				this.on({
-					'zoomanim': this._animatePathZoom,
-					'zoomend': this._endPathZoom
-				});
+					this.on({
+						'zoomanim': this._animatePathZoom,
+						'zoomend': this._endPathZoom
+					});
+				}, this), 0);
 			} else {
 				L.DomUtil.addClass(this._pathRoot, 'leaflet-zoom-hide');
 			}
