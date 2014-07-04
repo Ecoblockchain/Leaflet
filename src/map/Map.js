@@ -325,18 +325,14 @@ L.Map = L.Evented.extend({
 		return this._container;
 	},
 
-
-	// TODO replace with universal implementation after refactoring projections
-
 	getZoomScale: function (toZoom) {
 		var crs = this.options.crs;
 		return crs.scale(toZoom) / crs.scale(this._zoom);
 	},
 
 	getScaleZoom: function (scale) {
-		return this._zoom + (Math.log(scale) / Math.LN2);
+		return this.options.crs.getScaleZoom(this._zoom, scale);
 	},
-
 
 	// conversion methods
 
