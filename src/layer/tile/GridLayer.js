@@ -17,8 +17,10 @@ L.GridLayer = L.Layer.extend({
 		attribution: null,
 		bounds: null,
 
-		minZoom: 0
+		minZoom: 0,
 		// maxZoom: <Number>
+
+		padding: 0
 	},
 
 	initialize: function (options) {
@@ -427,7 +429,7 @@ L.GridLayer = L.Layer.extend({
 		var map = this._map,
 		    scale = map.getZoomScale(zoom, tileZoom),
 		    pixelCenter = map.project(center, tileZoom).floor(),
-		    halfSize = map.getSize().divideBy(scale * 2);
+		    halfSize = map.getSize().divideBy(scale * 2 / (1 + this.options.padding));
 
 		return new L.Bounds(pixelCenter.subtract(halfSize), pixelCenter.add(halfSize));
 	},

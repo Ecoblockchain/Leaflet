@@ -205,4 +205,28 @@ describe('GridLayer', function () {
 			});
 		});
 	});
+
+	it('loads tiles outside viewport when padding is applied', function () {
+		var tiles = [];
+		var createTile = function (coords) {
+			var tile = document.createElement('div');
+			tiles.push({coords: coords, tile: tile});
+			return tile;
+		};
+
+		map.setView([0, 0], 12);
+
+		var grid = L.gridLayer();
+		grid.createTile = createTile;
+
+		map.addLayer(grid);
+		var nTilesWithoutPadding = tiles.length;
+
+		grid = L.gridLayer({padding: 1});
+		grid.createTile = createTile;
+		tiles = [];
+
+		map.addLayer(grid);
+		expect(tiles.length).to.equal(Math.ceil((800 * 2) / 256) * Math.ceil(Math.ceil((600 * 2) / 256)));
+	});
 });
